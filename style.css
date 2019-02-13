@@ -22,7 +22,7 @@ h1 {
 
 #handContainer {
   position: fixed;
-  top: calc(38px + 1em + 1em + 10px);
+  top: calc(38px + 1em + 1em + 11px);
   height: 480px;
   width: 480px;
   display: flex;
@@ -30,7 +30,7 @@ h1 {
 }
 
 #hand {
-  background-color:  rgba(239, 239, 239,0.4);
+  background-color:  rgba(239, 239, 239,1);
   height:240px;
   width: 4px;
 }
@@ -60,9 +60,9 @@ h1 {
   background-color: rgba(239, 239, 239,0.2);
   cursor: pointer;
 }
-.button:active {
+.button:active, .button.click {
   background-color: rgba(239, 239, 239,0.5);
-  animation: wiggle 500ms;
+  animation: wiggle 333ms;
 }
 
 .button small {

@@ -19,11 +19,22 @@ function rotate() {
 	if (Timer.counter === 360) { 
 		Timer.counter = 0;
 		Timer.pomodoros.push(1)
-		UI.timer.style.backgroundColor = `rgba(239, 239, 239,${0.2 + Timer.pomodoros.length/10})`
+		UI.timer.style.backgroundColor = `rgba(239, 239, 239,${0.2 + Timer.pomodoros.length/6})`
 		renderPom()
 	}
 	UI.handContainer.style.transform = `rotate(${Timer.counter}deg)`
 	Timer.counter++
+	if (Timer.pomodoros.length === 5) { 
+		autoStop(); 
+	}
+}
+
+function autoStop() {
+	UI.stopButton.click();
+	UI.stopButton.classList.add('click');
+	setTimeout(() => {
+		UI.stopButton.classList.remove('click');
+	}, 333);
 }
 
 function start() {
