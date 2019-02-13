@@ -20,7 +20,7 @@ function rotate() {
 		Timer.counter = 0;
 		Timer.pomodoros.push(1)
 		UI.timer.style.backgroundColor = `rgba(239, 239, 239,${0.2 + Timer.pomodoros.length/10})`
-		renderPoms()
+		renderPom()
 	}
 	UI.handContainer.style.transform = `rotate(${Timer.counter}deg)`
 	Timer.counter++
@@ -33,12 +33,12 @@ function start() {
 
 function reset() {
 	Timer.counter = 0;
-	Timer.pomodoros = 0;
+	Timer.pomodoros.length = 0;
 	Timer.running = false;	
 	if (Timer.handle > 0) {clearInterval(Timer.handle)}
 	UI.handContainer.style.transform = `rotate(${Timer.counter}deg)`;
-	UI.timer.style.backgroundColor = `rgba(239, 239, 239,0.2)`
-
+	UI.timer.style.backgroundColor = `rgba(239, 239, 239,0.2)`;
+	while (UI.pomBox.lastChild) {UI.pomBox.removeChild(UI.pomBox.lastChild)}
 }
 
 function stop() {
@@ -46,12 +46,10 @@ function stop() {
 	Timer.running = false;
 }
 
-function renderPoms() {
-	Timer.pomodoros.forEach( pom => {
-		let p = document.createElement('div')
-		p.classList.add('pom')
-		UI.pomBox.appendChild(p)
-	})
+function renderPom() {
+	let p = document.createElement('div')
+	p.classList.add('pom')
+	UI.pomBox.appendChild(p)
 }
 
 document.addEventListener('DOMContentLoaded', () => {
