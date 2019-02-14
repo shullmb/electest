@@ -14,7 +14,7 @@ h1 {
 }
 
 #timer, .pom {
-  background-color: rgba(239, 239, 239, 0.1);
+  background-color: rgba(239, 239, 239, 0.0);
   height: 480px;
   width: 480px;
   border-radius: 50%;

@@ -1,10 +1,12 @@
 const UI = {
+	header: null,
 	timer: null,
 	handContainer: null,
 	startButton: null,
 	resetButton: null,
 	stopButton: null,
 	pomBox: null,
+	timerBGColor: null
 }
 
 const Timer = {
@@ -13,25 +15,22 @@ const Timer = {
 	interval: 10, 
 	counter: 0, 
 	pomodoros: [],
-	opacity: 0
+	opacity: 0,
+	RESET_VALUE: 360,
+	POM_GOAL: 5
 }
 
 
 function animateTimer() {
-	if (Timer.counter === 360) { 
+	if (Timer.counter === Timer.RESET_VALUE) { 
 		Timer.counter = 0;
 		Timer.pomodoros.push(1)
-		// Timer.opacity = 0.2 + Timer.pomodoros.length / 6;
-		// UI.timer.style.backgroundColor = `rgba(239, 239, 239,${Timer.opacity})`
 		renderPom()
 	}
 	rotate(Timer.counter);
+	adjustBGOpacity()
 	Timer.counter++
-	Timer.opacity = (((Timer.pomodoros.length + 1) / 10) + (Timer.counter / 360 )) / 5
-	UI.timer.style.backgroundColor = `rgba(239, 239, 239,${Timer.opacity})`
-	if (Timer.pomodoros.length === 5) { 
-		autoStop(); 
-	}
+	if (Timer.pomodoros.length === Timer.POM_GOAL) autoStop(); 
 }
 
 function rotate(num) {
@@ -39,11 +38,12 @@ function rotate(num) {
 }
 
 function autoStop() {
-	UI.stopButton.click();
+	stop()
 	UI.stopButton.classList.add('click');
 	setTimeout(() => {
 		UI.stopButton.classList.remove('click');
 	}, 333);
+	rotate(0);
 }
 
 function start() {
@@ -57,7 +57,7 @@ function reset() {
 	Timer.running = false;	
 	if (Timer.handle > 0) { clearInterval(Timer.handle) }
 	rotate(0)
-	UI.timer.style.backgroundColor = `rgba(239, 239, 239,0.2)`;
+	UI.timer.style.backgroundColor = `rgba(239, 239, 239, 0.0)`;
 	while (UI.pomBox.lastChild) {UI.pomBox.removeChild(UI.pomBox.lastChild)}
 }
 
@@ -72,8 +72,18 @@ function renderPom() {
 	UI.pomBox.appendChild(p)
 }
 
+function adjustBGOpacity() {
+	Timer.opacity = (Timer.counter + (Timer.pomodoros.length * Timer.RESET_VALUE)) / (Timer.RESET_VALUE * Timer.POM_GOAL)
+	let rgbaVal = /rgba\(\d+\,\s?\d+\,\s?\d+\,\s?(\d+\.?\d+|0|1)\)/
+	UI.timer.style.backgroundColor = UI.timerBGColor.replace(rgbaVal, (str, match) => {
+		return str.replace(match, Timer.opacity)
+	})
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+	UI.header = document.getElementsByTagName('h1')[0]
 	UI.timer = document.getElementById('timer');
+	UI.timerBGColor = getComputedStyle(UI.timer).backgroundColor
 	UI.handContainer = document.getElementById('handContainer');
 	UI.startButton = document.getElementById('start');
 	UI.resetButton = document.getElementById('reset');
@@ -84,12 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	UI.resetButton.addEventListener('click', reset)
 	UI.stopButton.addEventListener('click', stop)	
 	UI.handContainer.addEventListener('click', () => {
-		UI.timer.style.animation = 'wiggle 333ms';
+		UI.header.style.animation = 'wiggle 333ms';
 		setTimeout( () => {
-			UI.timer.style.animation = '';
+			UI.header.style.animation = '';
 		},333)
 	})
-	let computedTimerOpacity = getComputedStyle(UI.timer).backgroundColor.match(/0.\d+/)[0]
-	Timer.opacity = computedTimerOpacity;
-
 })
